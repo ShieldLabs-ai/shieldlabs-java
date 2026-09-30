@@ -1,0 +1,4 @@
+* text=auto eol=lf
+
+# Shared test fixtures are compared byte for byte (webhook signatures): never rewrite them.
+src/test/resources/fixtures/** -text

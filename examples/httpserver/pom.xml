@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>ai.shieldlabs.examples</groupId>
+  <artifactId>shieldlabs-example-httpserver</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>ShieldLabs example: com.sun.net.httpserver</name>
+  <description>Signup guard and webhook receiver built on the JDK HTTP server and the ShieldLabs Java SDK.</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>11</maven.compiler.release>
+    <shieldlabs.version>1.0.0</shieldlabs.version>
+    <jackson.version>2.22.3</jackson.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>ai.shieldlabs</groupId>
+      <artifactId>shieldlabs-java</artifactId>
+      <version>${shieldlabs.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.5.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.16.0</version>
+        <configuration>
+          <release>${maven.compiler.release}</release>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+            <arg>-Werror</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.6.4</version>
+        <configuration>
+          <mainClass>ai.shieldlabs.examples.ExampleServer</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
