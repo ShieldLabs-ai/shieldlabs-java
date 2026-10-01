@@ -1,0 +1,19 @@
+{
+  "groupId": "ai.shieldlabs",
+  "artifactId": "shieldlabs-generated",
+  "artifactVersion": "1.0.0",
+  "apiPackage": "ai.shieldlabs.generated.api",
+  "modelPackage": "ai.shieldlabs.generated.model",
+  "invokerPackage": "ai.shieldlabs.generated",
+  "library": "native",
+  "developerName": "ShieldLabs",
+  "developerEmail": "contact@shieldlabs.ai",
+  "developerOrganization": "ShieldLabs Inc.",
+  "developerOrganizationUrl": "https://shieldlabs.ai",
+  "licenseName": "MIT",
+  "licenseUrl": "https://opensource.org/licenses/MIT",
+  "scmConnection": "scm:git:https://github.com/ShieldLabs-ai/shieldlabs-java.git",
+  "scmDeveloperConnection": "scm:git:ssh://git@github.com/ShieldLabs-ai/shieldlabs-java.git",
+  "scmUrl": "https://github.com/ShieldLabs-ai/shieldlabs-java",
+  "hideGenerationTimestamp": true
+}
