@@ -335,6 +335,14 @@ Retries apply to GET requests only (every SDK call is a GET): exponential backof
 
 ## Development
 
+Refresh the generated client when the API description changes. This does not replace the supported library in this repository.
+
+```bash
+./sync.sh      # download the current OpenAPI description into resources/
+./generate.sh  # rebuild generated/ from that file
+```
+
+
 ```bash
 mvn verify                                   # compile with -Xlint:all -Werror, tests, coverage, javadoc
 mvn install -DskipTests && mvn -f examples/httpserver/pom.xml verify
