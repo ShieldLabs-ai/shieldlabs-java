@@ -18,7 +18,7 @@ class HistoryIteratorTest {
     private static final String B = "bbbbbbbb-0000-4000-8000-000000000002";
     private static final String C = "cccccccc-0000-4000-8000-000000000003";
     private static final String D = "dddddddd-0000-4000-8000-000000000004";
-    private static final String DEVICE = "ac7c303d-971b-41d1-8e25-cd5b46b46aed";
+    private static final String DEVICE = "d8e0f2a4-b6c8-4d0e-bf2a-4b6c8d0e2f4a";
 
     private static List<String> ids(Stream<Identification> stream) {
         return stream.map(Identification::getRequestId).collect(Collectors.toList());

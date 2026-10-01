@@ -216,7 +216,7 @@ class NormalizerEdgeCasesTest {
         assertEquals(a.getTrafficSource().hashCode(), b.getTrafficSource().hashCode());
         assertEquals(a.getDetectionFlags(), b.getDetectionFlags());
         assertEquals(a.getDetectionFlags().hashCode(), b.getDetectionFlags().hashCode());
-        assertTrue(a.toString().contains("02f1d973-84db-4156-a7f7-e799e6bf389b"));
+        assertTrue(a.toString().contains("a5b7c9d1-e3f5-4a7b-9c1d-3e5f7a9b1c3d"));
         assertTrue(a.toString().contains("band=dangerous"));
         assertTrue(a.getSignals().get(0).toString().contains("proxy"));
         assertTrue(a.getPublicIp().toString().contains("Netherlands"));
@@ -225,7 +225,7 @@ class NormalizerEdgeCasesTest {
         assertEquals("203.0.113.9", new IpInfo("203.0.113.9", "").toString());
 
         Identification history =
-                Identification.fromHistoryRow(Fixtures.map(Fixtures.normalizationCase("history_02f1d973").get("input")));
+                Identification.fromHistoryRow(Fixtures.map(Fixtures.normalizationCase("history_a5b7c9d1").get("input")));
         assertNotEquals(a, history, "different sources are different identifications");
         assertNotEquals(a, null);
         assertNotEquals(a, "x");

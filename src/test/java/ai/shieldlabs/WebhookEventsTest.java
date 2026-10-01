@@ -166,7 +166,7 @@ class WebhookEventsTest {
         assertEquals("2026-06-01", json.get("schema_version"));
         assertEquals("2026-09-30T12:34:57.482913041Z", json.get("created_at"));
         Map<String, Object> data = new LinkedHashMap<>(Fixtures.map(json.get("data")));
-        assertEquals("02f1d973-84db-4156-a7f7-e799e6bf389b", data.get("request_id"));
+        assertEquals("a5b7c9d1-e3f5-4a7b-9c1d-3e5f7a9b1c3d", data.get("request_id"));
         assertEquals(80, data.get("risk_score"));
     }
 }

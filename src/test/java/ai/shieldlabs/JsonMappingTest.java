@@ -12,7 +12,7 @@ class JsonMappingTest {
     @Test
     void identificationSerializesWithWebhookNamesInOrder() {
         Identification id =
-                Identification.fromHistoryRow(Fixtures.map(Fixtures.normalizationCase("history_02f1d973").get("input")));
+                Identification.fromHistoryRow(Fixtures.map(Fixtures.normalizationCase("history_a5b7c9d1").get("input")));
         Map<String, Object> json = Fixtures.serialized(id);
         assertEquals(
                 List.of(

@@ -31,7 +31,11 @@ mvn -f examples/httpserver/pom.xml verify
 - Tests must not need network access: use `TestServer` (a local `com.sun.net.httpserver` server)
   and `FakeTimer` for anything that waits.
 - The files in `src/test/resources/fixtures` are shared test fixtures that every ShieldLabs server
-  SDK passes. Do not edit them by hand; open an issue if one looks wrong.
+  SDK passes. Do not edit them by hand; open an issue if one looks wrong. They are synced from
+  `contract/` in shieldlabs-openapi: `contract-sync.json` maps each file,
+  `.shieldlabs-contract.lock` records the release, CI runs
+  `python3 scripts/sync_contract.py --check`, and the `contract-sync.yml` workflow opens a pull
+  request when a new release changes them.
 - Documentation and comments use plain, technical English: "risk signals", the three risk bands
   (trusted 0-29, suspicious 30-59, dangerous 60-100), colons or parentheses instead of dashes.
 - Use conventional commit messages (`feat: ...`, `fix: ...`, `test: ...`, `docs: ...`, `ci: ...`) and

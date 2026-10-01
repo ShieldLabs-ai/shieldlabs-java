@@ -1,0 +1,20 @@
+{
+  "source": "shieldlabs-openapi",
+  "files": {
+    "error-responses.json": "src/test/resources/fixtures/error-responses.json",
+    "history-empty.json": "src/test/resources/fixtures/history-empty.json",
+    "history-page.json": "src/test/resources/fixtures/history-page.json",
+    "management-profile-expected.json": "src/test/resources/fixtures/management-profile-expected.json",
+    "management-profile.json": "src/test/resources/fixtures/management-profile.json",
+    "normalization-cases.json": "src/test/resources/fixtures/normalization-cases.json",
+    "risk-band-cases.json": "src/test/resources/fixtures/risk-band-cases.json",
+    "signal-slug-cases.json": "src/test/resources/fixtures/signal-slug-cases.json",
+    "webhook-identification-scored.json": "src/test/resources/fixtures/webhook-identification-scored.json",
+    "webhook-identification-scored.raw.txt": "src/test/resources/fixtures/webhook-identification-scored.raw.txt",
+    "webhook-ping.json": "src/test/resources/fixtures/webhook-ping.json",
+    "webhook-ping.raw.txt": "src/test/resources/fixtures/webhook-ping.raw.txt",
+    "webhook-rate-limited.json": "src/test/resources/fixtures/webhook-rate-limited.json",
+    "webhook-signature-vectors.json": "src/test/resources/fixtures/webhook-signature-vectors.json",
+    "webhook-test-delivery.json": "src/test/resources/fixtures/webhook-test-delivery.json"
+  }
+}

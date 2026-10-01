@@ -24,17 +24,17 @@ class HistoryClientTest {
                     client.history()
                             .search(
                                     LookupType.DEVICE_ID,
-                                    "AC7C303D-971B-41D1-8E25-CD5B46B46AED",
+                                    "D8E0F2A4-B6C8-4D0E-BF2A-4B6C8D0E2F4A",
                                     HistorySearchOptions.builder().limit(50).offset(10).build());
             assertEquals(37, page.getTotal());
             assertEquals(5, page.getIdentifications().size());
-            assertEquals("02f1d973-84db-4156-a7f7-e799e6bf389b", page.getIdentifications().get(0).getRequestId());
+            assertEquals("a5b7c9d1-e3f5-4a7b-9c1d-3e5f7a9b1c3d", page.getIdentifications().get(0).getRequestId());
             assertEquals(Identification.Source.HISTORY, page.getIdentifications().get(0).getSource());
             assertTrue(page.toString().contains("total=37"));
 
             TestServer.Recorded request = server.requests().get(0);
             assertEquals("GET", request.method);
-            assertEquals("/api/v1/history/device_id/ac7c303d-971b-41d1-8e25-cd5b46b46aed", request.rawPath);
+            assertEquals("/api/v1/history/device_id/d8e0f2a4-b6c8-4d0e-bf2a-4b6c8d0e2f4a", request.rawPath);
             assertEquals("limit=50&offset=10", request.rawQuery);
             assertEquals("Bearer " + Clients.API_KEY, request.header("Authorization"));
             assertEquals("application/json", request.header("Accept"));
