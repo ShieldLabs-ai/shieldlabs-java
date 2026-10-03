@@ -56,10 +56,11 @@ public final class ManagementClient {
                 builder.httpClient != null
                         ? builder.httpClient
                         : HttpClient.newBuilder().connectTimeout(builder.timeout).build();
+        String[] domainHeader = WireModels.profileHeaders(normalized);
         String[] headers = {
             "Accept", "application/json",
             "User-Agent", Transport.userAgent(),
-            "X-Shield-Domain", normalized,
+            domainHeader[0], domainHeader[1],
             "Authorization", "Bearer " + secretKey,
         };
         this.baseUrl = URI.create(origin);

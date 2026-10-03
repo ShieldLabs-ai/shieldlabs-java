@@ -24,7 +24,28 @@ mvn install -DskipTests
 mvn -f examples/httpserver/pom.xml verify
 ```
 
-## Guidelines
+## OpenAPI contract updates
+
+Install the pinned generator dependency with `python3 -m pip install -r scripts/requirements.txt`.
+After updating `resources/shieldlabs-api.yaml`, run `python3 scripts/generate-wire.py`, then
+`python3 scripts/generate-wire.py --check` and `python3 scripts/check-wire-drift.py`.
+The latter compiles the supported client against renamed and retyped fields and an optional additive
+field. Use `--docker` if Maven is available only in the documented container. Run `mvn verify` and
+`bash scripts/verify-package.sh` afterward.
+
+Run `python3 scripts/test-wire-generation.py` for operation-boundary regression checks. New required
+parameters on either consumed operation and a changed Management profile route require an adapter
+update. Optional new query/header parameters remain compatible. Ping and scored webhook envelope
+fields must retain compatible names and declared kinds because the runtime shares envelope parsing.
+
+`WireModels.java` contains generated, package-private schema views. `WireValue` keeps the original
+JSON value behind a declared-kind wrapper. Normalization requires the matching kind, so type drift
+fails compilation without introducing strict deserialization of old or unexpected server values.
+Enums remain strings on responses; unknown fields remain in `raw()`. New wire shapes or schema
+constructs not supported by the narrow generator fail explicitly and need an adapter change.
+The `generated/` directory is a separate reference client, not the supported runtime.
+
+## Code guidelines
 
 - Keep the public API small and the runtime dependencies to Jackson Databind only. Public methods
   need javadoc.

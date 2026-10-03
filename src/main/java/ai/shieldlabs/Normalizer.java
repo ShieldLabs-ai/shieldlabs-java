@@ -121,148 +121,155 @@ final class Normalizer {
     }
 
     static Identification fromHistoryRow(Map<?, ?> row) {
-        Object leakSourceValue = row.get("webrtc_leak_source");
+        WireModels.HistoryRow rowWire = new WireModels.HistoryRow(row);
+        Object leakSourceValue = WireValue.string(rowWire.webrtc_leak_source());
         String leakSource = leakSourceValue instanceof String ? Text.strip((String) leakSourceValue) : "";
         String localIp;
         String localCountry;
         if (!leakSource.isEmpty() && !"none".equals(leakSource)) {
-            localIp = ip(row.get("webrtc_leak_ip"));
-            localCountry = Json.orEmpty(row.get("webrtc_leak_country"));
+            localIp = ip(WireValue.string(rowWire.webrtc_leak_ip()));
+            localCountry = Json.orEmpty(WireValue.string(rowWire.webrtc_leak_country()));
         } else {
-            localIp = ip(row.get("web_rtc_ip"));
-            localCountry = Json.orEmpty(row.get("web_rtc_country"));
+            localIp = ip(WireValue.string(rowWire.web_rtc_ip()));
+            localCountry = Json.orEmpty(WireValue.string(rowWire.web_rtc_country()));
         }
-        String publicIp = ip(row.get("ip"));
+        String publicIp = ip(WireValue.string(rowWire.ip()));
 
         List<Signal> signals = new ArrayList<>();
         boolean ipLeakDetail = false;
-        for (Object entry : scoreDetails(row.get("score_details"))) {
+        for (Object entry : scoreDetails(WireValue.string(rowWire.score_details()))) {
             Map<?, ?> detail = Json.object(entry);
             if (detail == null) {
                 continue;
             }
-            String description = Json.orEmpty(detail.get("Description"));
+            WireModels.ScoreDetail detailWire = new WireModels.ScoreDetail(detail);
+            String description = Json.orEmpty(WireValue.string(detailWire.Description()));
             if (description.startsWith(IP_LEAK_PREFIX)) {
                 ipLeakDetail = true;
             }
-            Integer weight = Json.intValue(detail.containsKey("Value") ? detail.get("Value") : 0);
+            Integer weight = Json.intValue(detail.containsKey("Value") ? WireValue.integer(detailWire.Value()) : 0);
             if (weight == null || weight == 0) {
                 continue;
             }
             signals.add(new Signal(signalSlug(description), weight, description));
         }
 
-        boolean searchBot = Json.truthy(row.get("is_search_bot"));
+        boolean searchBot = Json.truthy(WireValue.bool(rowWire.is_search_bot()));
         EnumSet<DetectionFlag> flags = EnumSet.noneOf(DetectionFlag.class);
         for (DetectionFlag flag : DetectionFlag.values()) {
             boolean value;
             if (flag == DetectionFlag.BROWSER_VPN_PROXY) {
-                value = ConnectionType.BROWSER_VPN_PROXY.equals(row.get("connection_type"));
+                value = ConnectionType.BROWSER_VPN_PROXY.equals(WireValue.string(rowWire.connection_type()));
             } else if (flag == DetectionFlag.IP_MISMATCH) {
                 value = !searchBot
                         && (ipLeakDetail
                                 || (!publicIp.isEmpty() && !localIp.isEmpty() && !publicIp.equals(localIp)));
             } else {
-                value = Json.truthy(row.get(flag.historyKey()));
+                value = Json.truthy(flag.historyValue(rowWire));
             }
             if (value) {
                 flags.add(flag);
             }
         }
 
-        String siteDomain = Json.orEmpty(row.get("site_domain"));
+        String siteDomain = Json.orEmpty(WireValue.string(rowWire.site_domain()));
         TrafficSource traffic =
                 new TrafficSource(
-                        Json.orEmpty(row.get("traffic_channel")),
-                        Json.orEmpty(row.get("referrer_domain")),
-                        Json.orEmpty(row.get("entry_url")),
-                        Json.orEmpty(row.get("click_id_type")),
-                        Json.orEmpty(row.get("utm_source")),
-                        Json.orEmpty(row.get("utm_medium")),
-                        Json.orEmpty(row.get("utm_campaign")),
-                        Json.orEmpty(row.get("utm_content")),
-                        Json.orEmpty(row.get("utm_term")));
+                        Json.orEmpty(WireValue.string(rowWire.traffic_channel())),
+                        Json.orEmpty(WireValue.string(rowWire.referrer_domain())),
+                        Json.orEmpty(WireValue.string(rowWire.entry_url())),
+                        Json.orEmpty(WireValue.string(rowWire.click_id_type())),
+                        Json.orEmpty(WireValue.string(rowWire.utm_source())),
+                        Json.orEmpty(WireValue.string(rowWire.utm_medium())),
+                        Json.orEmpty(WireValue.string(rowWire.utm_campaign())),
+                        Json.orEmpty(WireValue.string(rowWire.utm_content())),
+                        Json.orEmpty(WireValue.string(rowWire.utm_term())));
         return new Identification(
-                Json.text(row.get("request_id")),
-                Json.text(row.get("visitor_id")),
-                Json.text(row.get("device_id")),
-                Json.text(row.get("session_id")),
-                Json.text(row.get("cookie_id")),
-                userHid(row.get("user_hid")),
-                siteDomain.isEmpty() ? Json.text(row.get("domain")) : siteDomain,
-                new IpInfo(publicIp, Json.orEmpty(row.get("country"))),
+                Json.text(WireValue.string(rowWire.request_id())),
+                Json.text(WireValue.string(rowWire.visitor_id())),
+                Json.text(WireValue.string(rowWire.device_id())),
+                Json.text(WireValue.string(rowWire.session_id())),
+                Json.text(WireValue.string(rowWire.cookie_id())),
+                userHid(WireValue.string(rowWire.user_hid())),
+                siteDomain.isEmpty() ? Json.text(WireValue.string(rowWire.domain())) : siteDomain,
+                new IpInfo(publicIp, Json.orEmpty(WireValue.string(rowWire.country()))),
                 new IpInfo(localIp, localCountry),
-                Json.text(row.get("connection_type")),
-                Json.text(row.get("os")),
-                Json.text(row.get("browser")),
-                Json.text(row.get("device_type")),
+                Json.text(WireValue.string(rowWire.connection_type())),
+                Json.text(WireValue.string(rowWire.os())),
+                Json.text(WireValue.string(rowWire.browser())),
+                Json.text(WireValue.string(rowWire.device_type())),
                 traffic,
-                score(row.get("score")),
+                score(WireValue.integer(rowWire.score())),
                 signals,
                 new DetectionFlags(flags),
-                Timestamps.parseHistoryTime(row.get("created_at")),
+                Timestamps.parseHistoryTime(WireValue.string(rowWire.created_at())),
                 Identification.Source.HISTORY,
                 Json.freezeObject(row));
     }
 
     static Identification fromWebhookData(Map<?, ?> data) {
-        Map<?, ?> flagValues = Json.objectOrEmpty(data.get("detection_flags"));
+        WireModels.IdentificationScoredData dataWire = new WireModels.IdentificationScoredData(data);
+        Map<?, ?> flagValues = Json.objectOrEmpty(WireValue.object(dataWire.detection_flags()));
+        WireModels.DetectionFlags flagsWire = new WireModels.DetectionFlags(flagValues);
         EnumSet<DetectionFlag> flags = EnumSet.noneOf(DetectionFlag.class);
         for (DetectionFlag flag : DetectionFlag.values()) {
-            if (Json.truthy(flagValues.get(flag.getValue()))) {
+            if (Json.truthy(flag.webhookValue(flagsWire))) {
                 flags.add(flag);
             }
         }
-        Map<?, ?> ts = Json.objectOrEmpty(data.get("traffic_source"));
+        Map<?, ?> ts = Json.objectOrEmpty(WireValue.object(dataWire.traffic_source()));
+        WireModels.TrafficSource tsWire = new WireModels.TrafficSource(ts);
         TrafficSource traffic =
                 new TrafficSource(
-                        Json.orEmpty(ts.get("channel")),
-                        Json.orEmpty(ts.get("referrer_domain")),
-                        Json.orEmpty(ts.get("landing_url")),
-                        Json.orEmpty(ts.get("click_id_type")),
-                        Json.orEmpty(ts.get("utm_source")),
-                        Json.orEmpty(ts.get("utm_medium")),
-                        Json.orEmpty(ts.get("utm_campaign")),
-                        Json.orEmpty(ts.get("utm_content")),
-                        Json.orEmpty(ts.get("utm_term")));
+                        Json.orEmpty(WireValue.string(tsWire.channel())),
+                        Json.orEmpty(WireValue.string(tsWire.referrer_domain())),
+                        Json.orEmpty(WireValue.string(tsWire.landing_url())),
+                        Json.orEmpty(WireValue.string(tsWire.click_id_type())),
+                        Json.orEmpty(WireValue.string(tsWire.utm_source())),
+                        Json.orEmpty(WireValue.string(tsWire.utm_medium())),
+                        Json.orEmpty(WireValue.string(tsWire.utm_campaign())),
+                        Json.orEmpty(WireValue.string(tsWire.utm_content())),
+                        Json.orEmpty(WireValue.string(tsWire.utm_term())));
         List<Signal> signals = new ArrayList<>();
-        Object signalValues = data.get("signals");
+        Object signalValues = WireValue.array(dataWire.signals());
         if (signalValues instanceof List) {
             for (Object entry : (List<?>) signalValues) {
                 Map<?, ?> signal = Json.object(entry);
                 if (signal == null) {
                     continue;
                 }
-                Integer weight = Json.intValue(signal.get("weight"));
-                signals.add(new Signal(Json.text(signal.get("name")), weight == null ? 0 : weight, null));
+                WireModels.Signal signalWire = new WireModels.Signal(signal);
+                Integer weight = Json.intValue(WireValue.integer(signalWire.weight()));
+                signals.add(new Signal(Json.text(WireValue.string(signalWire.name())), weight == null ? 0 : weight, null));
             }
         }
         return new Identification(
-                Json.text(data.get("request_id")),
-                Json.text(data.get("visitor_id")),
-                Json.text(data.get("device_id")),
-                Json.text(data.get("session_id")),
-                Json.text(data.get("cookie_id")),
-                userHid(data.get("user_hid")),
-                Json.text(data.get("domain")),
-                ipInfo(data.get("public_ip")),
-                ipInfo(data.get("local_ip")),
-                Json.text(data.get("connection_type")),
-                Json.text(data.get("os")),
-                Json.text(data.get("browser")),
-                Json.text(data.get("device_type")),
+                Json.text(WireValue.string(dataWire.request_id())),
+                Json.text(WireValue.string(dataWire.visitor_id())),
+                Json.text(WireValue.string(dataWire.device_id())),
+                Json.text(WireValue.string(dataWire.session_id())),
+                Json.text(WireValue.string(dataWire.cookie_id())),
+                userHid(WireValue.string(dataWire.user_hid())),
+                Json.text(WireValue.string(dataWire.domain())),
+                ipInfo(WireValue.object(dataWire.public_ip())),
+                ipInfo(WireValue.object(dataWire.local_ip())),
+                Json.text(WireValue.string(dataWire.connection_type())),
+                Json.text(WireValue.string(dataWire.os())),
+                Json.text(WireValue.string(dataWire.browser())),
+                Json.text(WireValue.string(dataWire.device_type())),
                 traffic,
-                score(data.get("risk_score")),
+                score(WireValue.integer(dataWire.risk_score())),
                 signals,
                 new DetectionFlags(flags),
-                Timestamps.parseRfc3339(data.get("observed_at")),
+                Timestamps.parseRfc3339(WireValue.string(dataWire.observed_at())),
                 Identification.Source.WEBHOOK,
                 Json.freezeObject(data));
     }
 
     private static IpInfo ipInfo(Object value) {
         Map<?, ?> object = Json.objectOrEmpty(value);
-        return new IpInfo(ip(object.get("ip")), Json.orEmpty(object.get("country")));
+        WireModels.IpInfo objectWire = new WireModels.IpInfo(object);
+        return new IpInfo(ip(WireValue.string(objectWire.ip())), Json.orEmpty(WireValue.string(objectWire.country())));
     }
 
     /** {@code ""} becomes {@code null}; every other value, including placeholders, is kept. */

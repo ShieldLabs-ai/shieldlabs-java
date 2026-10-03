@@ -167,8 +167,9 @@ public final class HistoryService {
 
     URI uri(LookupType type, String value, int limit, long offset) {
         String checked = Validation.lookupValue(type, value);
-        return URI.create(origin + "/api/v1/history/" + type.getValue() + "/" + Urls.encodePathSegment(checked)
-                + "?limit=" + limit + "&offset=" + offset);
+        return URI.create(origin + WireModels.HISTORY_PATH.replace("{search_type}", type.getValue())
+                .replace("{value}", Urls.encodePathSegment(checked))
+                + WireModels.historyQuery(limit, offset));
     }
 
     static HistoryPage parsePage(JsonResponse response) {
@@ -176,7 +177,8 @@ public final class HistoryService {
         if (body == null) {
             throw response.unexpected("expected a JSON object with data and total");
         }
-        Object data = body.get("data");
+        WireModels.HistoryPage bodyWire = new WireModels.HistoryPage(body);
+        Object data = WireValue.array(bodyWire.data());
         if (data != null && !(data instanceof List)) {
             throw response.unexpected("data is not an array");
         }
@@ -188,7 +190,7 @@ public final class HistoryService {
                 items.add(Normalizer.fromHistoryRow(object));
             }
         }
-        Long total = Json.longValue(body.get("total"));
+        Long total = Json.longValue(WireValue.integer(bodyWire.total()));
         return new HistoryPage(items, total == null ? rows.size() : total, rows.size());
     }
 

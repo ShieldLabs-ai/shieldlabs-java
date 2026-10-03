@@ -32,11 +32,24 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
 
+      - name: Check supported-client wire generation
+        run: |
+          python3 -m pip install -r scripts/requirements.txt
+          python3 scripts/generate-wire.py --check
+          python3 scripts/test-wire-generation.py
+
+      - name: Reject breaking contract mutations
+        if: matrix.java == '17'
+        run: python3 scripts/check-wire-drift.py
+
       - name: Build, test, coverage and javadoc
         run: mvn -B -ntp install
 
       - name: Compile the example against the installed SDK
         run: mvn -B -ntp -f examples/httpserver/pom.xml verify
+
+      - name: Check a consumer of the packaged jar
+        run: bash scripts/verify-package.sh
 
   generated:
     name: Generated API types
@@ -46,6 +59,8 @@ jobs:
         with:
           persist-credentials: false
       - name: Rebuild generated files
-        run: ./generate.sh
+        run: |
+          python3 -m pip install -r scripts/requirements.txt
+          ./generate.sh
       - name: Fail if generated files drifted
         run: git diff --exit-code

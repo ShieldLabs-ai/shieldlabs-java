@@ -243,18 +243,19 @@ public final class Webhooks {
         if (envelope == null) {
             throw new WebhookParseException("The webhook body is not a JSON object");
         }
-        Object type = envelope.get("event_type");
+        WireModels.IdentificationScoredEvent envelopeWire = new WireModels.IdentificationScoredEvent(envelope);
+        Object type = WireValue.string(envelopeWire.event_type());
         if (!(type instanceof String) || ((String) type).isEmpty()) {
             throw new WebhookParseException("The webhook body has no event_type");
         }
-        Object version = envelope.get("schema_version");
+        Object version = WireValue.string(envelopeWire.schema_version());
         String schemaVersion = version instanceof String ? (String) version : null;
         warnOnUnknownSchemaVersion(schemaVersion);
-        Instant createdAt = Timestamps.parseRfc3339(envelope.get("created_at"));
+        Instant createdAt = Timestamps.parseRfc3339(WireValue.string(envelopeWire.created_at()));
         Map<String, Object> raw = Json.freezeObject(envelope);
         switch ((String) type) {
             case WebhookEvent.IDENTIFICATION_SCORED:
-                Map<?, ?> data = Json.object(envelope.get("data"));
+                Map<?, ?> data = Json.object(WireValue.object(envelopeWire.data()));
                 if (data == null) {
                     throw new WebhookParseException("The identification.scored event has no data object");
                 }

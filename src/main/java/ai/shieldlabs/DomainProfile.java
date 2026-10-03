@@ -43,13 +43,14 @@ public final class DomainProfile {
     }
 
     static DomainProfile fromJson(Map<?, ?> body) {
-        Long weight = Json.longValue(body.get("Weight"));
+        WireModels.DomainProfile bodyWire = new WireModels.DomainProfile(body);
+        Long weight = Json.longValue(WireValue.integer(bodyWire.Weight()));
         return new DomainProfile(
-                Json.text(body.get("Domain")),
+                Json.text(WireValue.string(bodyWire.Domain())),
                 weight == null ? 0L : weight,
-                Json.text(body.get("PublicKey")),
-                Json.text(body.get("Secret")),
-                Timestamps.parseRfc3339(body.get("CreatedAt")),
+                Json.text(WireValue.string(bodyWire.PublicKey())),
+                Json.text(WireValue.string(bodyWire.Secret())),
+                Timestamps.parseRfc3339(WireValue.string(bodyWire.CreatedAt())),
                 Json.freezeObject(body));
     }
 

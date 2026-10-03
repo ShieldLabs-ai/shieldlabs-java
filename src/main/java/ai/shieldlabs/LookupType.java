@@ -11,22 +11,22 @@ package ai.shieldlabs;
  */
 public enum LookupType {
     /** Dotted IPv4 address (IPv6 addresses are not searchable). */
-    IP("ip"),
+    IP(WireModels.SearchType.IP.wire()),
     /**
      * User HID exactly as passed to the agent, including {@code "anonymous"}. Values that contain
      * {@code /}, and the values {@code .} and {@code ..}, cannot be searched.
      */
-    USER_HID("user_hid"),
+    USER_HID(WireModels.SearchType.USER_HID.wire()),
     /** Visitor ID (UUID). */
-    VISITOR_ID("visitor_id"),
+    VISITOR_ID(WireModels.SearchType.VISITOR_ID.wire()),
     /** Request ID (UUID) of one identification. */
-    REQUEST_ID("request_id"),
+    REQUEST_ID(WireModels.SearchType.REQUEST_ID.wire()),
     /** Device ID (UUID). */
-    DEVICE_ID("device_id"),
+    DEVICE_ID(WireModels.SearchType.DEVICE_ID.wire()),
     /** Session ID (UUID). */
-    SESSION_ID("session_id"),
+    SESSION_ID(WireModels.SearchType.SESSION_ID.wire()),
     /** Cookie ID (UUID). */
-    COOKIE_ID("cookie_id");
+    COOKIE_ID(WireModels.SearchType.COOKIE_ID.wire());
 
     private final String value;
 
