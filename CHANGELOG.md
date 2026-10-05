@@ -8,7 +8,9 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Added
 
-- `sync.sh` downloads the OpenAPI description and `generate.sh` rebuilds `generated/` from it. The supported client is unchanged.
+- `sync.sh` downloads the OpenAPI description and `generate.sh` rebuilds the generated clients.
+- Connect the supported client to OpenAPI-generated wire views, preserving tolerant normalization.
+- Check generated freshness, breaking schema mutations and installed-jar consumption in CI.
 
 ## [1.0.0] - 2026-09-30
 

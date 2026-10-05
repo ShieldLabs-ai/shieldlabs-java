@@ -43,8 +43,18 @@ jobs:
             exit 1
           fi
 
+      - name: Check supported-client contract
+        run: |
+          python3 -m pip install -r scripts/requirements.txt
+          python3 scripts/generate-wire.py --check
+          python3 scripts/test-wire-generation.py
+          python3 scripts/check-wire-drift.py
+
       - name: Build, test, coverage and javadoc
         run: mvn -B -ntp verify
+
+      - name: Check a consumer of the packaged jar
+        run: bash scripts/verify-package.sh
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

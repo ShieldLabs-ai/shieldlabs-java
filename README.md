@@ -335,11 +335,21 @@ Retries apply to GET requests only (every SDK call is a GET): exponential backof
 
 ## Development
 
-Refresh the generated client when the API description changes. This does not replace the supported library in this repository.
+The supported client consumes schema-generated wire views for History, profiles, webhooks and
+lookup types. The generator retains raw values so existing tolerant normalization and unknown-field
+handling remain unchanged. Renaming a consumed field or changing its declared type requires the
+client adapter to be updated: contract mutation checks exercise this in CI.
+
+The standalone client in `generated/` remains a reference implementation; its transport is not
+used by the supported library. Retries, polling and webhook verification remain in this library.
 
 ```bash
 ./sync.sh      # download the current OpenAPI description into resources/
-./generate.sh  # rebuild generated/ from that file
+python3 -m pip install -r scripts/requirements.txt
+python3 scripts/generate-wire.py          # supported client's wire views
+python3 scripts/generate-wire.py --check  # fail on stale views
+python3 scripts/check-wire-drift.py       # real compiler checks (requires Maven)
+./generate.sh  # also rebuild the standalone reference client (requires Docker)
 ```
 
 
