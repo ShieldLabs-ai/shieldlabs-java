@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  */
 public final class ShieldLabsClient {
     /** Version of this SDK, sent in the {@code User-Agent} header. */
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.1";
     /** Default History API origin. */
     public static final URI DEFAULT_BASE_URL = URI.create("https://account.shieldlabs.ai");
     /** Default timeout of one HTTP attempt. */
