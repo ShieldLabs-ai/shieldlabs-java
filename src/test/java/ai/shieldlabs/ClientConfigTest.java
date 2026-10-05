@@ -194,7 +194,7 @@ class ClientConfigTest {
     @Test
     void userAgentNamesTheSdkAndRuntime() {
         String userAgent = Transport.userAgent();
-        assertTrue(userAgent.startsWith("shieldlabs-java/1.0.0 (Java "), userAgent);
+        assertTrue(userAgent.startsWith("shieldlabs-java/1.0.1 (Java "), userAgent);
         assertTrue(userAgent.endsWith(")"), userAgent);
         assertTrue(userAgent.matches("[ -~]+"), "printable ASCII only");
     }
