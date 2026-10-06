@@ -2,6 +2,7 @@ package ai.shieldlabs;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.time.Instant;
@@ -378,6 +379,12 @@ public final class Identification {
      *
      * @return an unmodifiable map
      */
+    @JsonProperty("client_identity")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public ClientIdentity getClientIdentity() {
+        return ClientIdentity.fromValue(raw.get("client_identity"));
+    }
+
     public Map<String, Object> raw() {
         return raw;
     }
